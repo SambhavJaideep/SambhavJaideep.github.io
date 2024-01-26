@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Now Playing</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&display=swap">
+    <style>
+        body {
+            background-color: #000;
+            color: #fff;
+            text-align: center;
+            margin: 0;
+        }
+
+        .theater-sign {
+            background-color: #333;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
+            width: 300px;
+            margin: 100px auto;
+        }
+
+        h1 {
+            font-size: 28px;
+            margin: 0;
+            color: #ffd700; /* Gold color for the title */
+            font-family: 'Cinzel', sans-serif; /* Use Cinzel font */
+
+        }
+
+        p {
+            font-size: 18px;
+            margin: 10px 0;
+            color: #fff;
+        }
+
+        hr {
+            border: 1px solid #fff;
+            margin: 15px 0;
+        }
+
+        .movie-details {
+            text-align: left;
+        }
+
+        .label {
+            font-weight: bold;
+            display: inline-block;
+            width: 80px;
+            color: #ffd700;
+        }
+
+        .value {
+            display: inline-block;
+            color: #fff;
+        }
+
+                .movie-button {
+            background-color: #e50914; /* Red color */
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            font-size: 18px;
+            border-radius: 5px;
+            cursor: pointer;
+            display: inline-block;
+            text-decoration: none;
+            transition: background-color 0.3s ease;
+        }
+
+        .movie-button:hover {
+            background-color: #fff; /* White color on hover */
+            color: #e50914; /* Red color on hover */
+        }
+    </style>
+</head>
+<body>
+    <div class="theater-sign">
+        <h1>Now Playing</h1>
+        <hr>
+        <div class="movie-details">
+            <p id="actors"></p>
+            <p id="genre"></p>
+            <p id="plotPoint"></p>
+        </div>
+        <hr>
+    </div>
+    <button class="movie-button" onclick="generateMovie()">Generate Movie Idea</button>
+    <script>
+        // Define lists of actors, genres, and plot points
+        var actors = [
+            "Tom Hanks", "Meryl Streep", "Robert Downey Jr.", "Scarlett Johansson", "Leonardo DiCaprio",
+            "Angelina Jolie", "Brad Pitt", "Jennifer Lawrence", "Denzel Washington", "Cate Blanchett",
+            "Johnny Depp", "Julia Roberts", "Chris Hemsworth", "Charlize Theron", "Matthew McConaughey",
+            "Natalie Portman", "Will Smith", "Anne Hathaway", "Ryan Gosling", "Emma Stone",
+            "Keanu Reeves", "Nicole Kidman", "Christian Bale", "Jessica Chastain", "Hugh Jackman",
+            "Sandra Bullock", "Daniel Day-Lewis", "Mila Kunis", "George Clooney", "Reese Witherspoon",
+            "Bradley Cooper", "Cameron Diaz", "Mark Wahlberg", "Kate Winslet", "Joaquin Phoenix",
+            "Emma Watson", "Chris Evans", "Harrison Ford", "Gwyneth Paltrow", "Javier Bardem",
+            "Keira Knightley", "Michael Fassbender", "Amy Adams", "Chris Pratt", "Eva Mendes",
+            "Jake Gyllenhaal", "Julianne Moore", "Ben Affleck", "Zoe Saldana", "Russell Crowe",
+            "Halle Berry", "Tom Cruise", "Sharon Stone", "Eddie Redmayne", "Charlton Heston",
+            "Maggie Gyllenhaal", "Jude Law", "Alicia Vikander", "Dwayne Johnson", "Viola Davis",
+            "John Travolta", "Eva Green", "Robert Pattinson", "Helen Mirren", "Owen Wilson",
+            "Emily Blunt", "Colin Firth", "Megan Fox", "James McAvoy", "Penélope Cruz",
+            "Chadwick Boseman", "Amanda Seyfried", "Tom Hardy", "Mila Kunis", "Viggo Mortensen",
+            "Natalie Dormer", "Idris Elba", "Kristen Stewart", "James Franco", "Greta Gerwig",
+            "Ryan Reynolds", "Salma Hayek", "Ralph Fiennes", "Adele", "Kerry Washington",
+            "Dev Patel", "Rachel McAdams", "Tommy Lee Jones", "Lupita Nyong'o", "Ewan McGregor",
+            "Catherine Zeta-Jones", "Daniel Craig", "Tessa Thompson", "Matthew Damon", "Maggie Smith"
+        ];
+
+        var genres = [
+            "Action", "Adventure", "Animation", "Biography", "Comedy",
+            "Crime", "Documentary", "Drama", "Family", "Fantasy",
+            "Film Noir", "History", "Horror", "Music", "Musical",
+            "Mystery", "Romance", "Sci-Fi", "Sport", "Thriller",
+            "War", "Western", "Superhero", "Spy", "Spy-Fi",
+            "Mockumentary", "Coming-of-Age", "Courtroom Drama", "Epic", "Exploitation",
+            "Fairy Tale", "Gangster", "Heist", "Monster", "Natural Disaster",
+            "Parody", "Political Drama", "Psychological Thriller", "Satire", "Slasher",
+            "Space Opera", "Steampunk", "Survival", "Time Travel", "Urban Fantasy",
+            "Whodunit", "Zombie Apocalypse", "Cyberpunk", "Post-Apocalyptic", "Neo-Noir",
+            "Biopic", "Chick Flick", "Chiller", "Creature Feature", "Dystopian",
+            "Film Adaptation", "Found Footage", "Historical Epic", "Magical Realism", "Medical Drama",
+            "Monster Movie", "Mumblecore", "Period Piece", "Social Drama", "Space Western",
+            "Swashbuckler", "Techno Thriller", "Teen Movie", "True Crime", "Wuxia",
+            "Apocalyptic Comedy", "Political Satire", "Musical Comedy", "Psychological Horror", "Romantic Comedy",
+            "Space Thriller", "Tragedy", "Travel Documentary", "Futuristic Fantasy", "Historical Fantasy"
+        ];
+
+        var plotPoints = [
+            "Saving the world from imminent destruction",
+            "Discovering a hidden treasure in an ancient city",
+            "Falling in love against all odds",
+            "Solving a high-profile murder mystery",
+            "Overcoming personal challenges to achieve greatness",
+            "Embarking on a time travel adventure",
+            "Uncovering a government conspiracy",
+            "Revenge for a loved one's betrayal",
+            "Surviving a natural disaster",
+            "Escaping from a maximum-security prison",
+            "Navigating the complexities of high school life",
+            "Infiltrating an enemy spy organization",
+            "Battling supernatural forces to save humanity",
+            "Finding redemption after a life of crime",
+            "Discovering a parallel universe",
+            "Chasing a dream against societal expectations",
+            "Confronting inner demons to find inner peace",
+            "Conquering an alien invasion",
+            "Building a successful business from scratch",
+            "Experiencing a forbidden love affair",
+            "Exploring the uncharted depths of the ocean",
+            "Struggling for survival in a post-apocalyptic world",
+            "Outsmarting a mastermind criminal",
+            "Fighting for justice in a corrupt system",
+            "Exploring the wonders of space",
+            "Reuniting with a long-lost family",
+            "Mastering a new skill against all odds",
+            "Competing in an intense sports championship",
+            "Escaping a haunted house",
+            "Navigating the challenges of parenthood",
+            "Breaking free from a toxic relationship",
+            "Embarking on a cross-country road trip",
+            "Solving a riddle that unlocks hidden knowledge",
+            "Confronting a personal phobia",
+            "Creating an unlikely alliance to achieve a common goal",
+            "Surviving a deadly virus outbreak",
+            "Chasing dreams of stardom in the entertainment industry",
+            "Battling a powerful supernatural entity",
+            "Exposing corruption in a powerful institution",
+            "Exploring the secrets of an ancient civilization",
+            "Defending a wrongly accused friend",
+            "Infiltrating the world of organized crime",
+            "Surviving a plane crash in a remote wilderness",
+            "Conquering an addiction and rebuilding life",
+            "Discovering a magical artifact with world-altering powers",
+            "Escaping captivity in a war-torn country",
+            "Uncovering a family secret with far-reaching consequences",
+            "Becoming a hero in a fantasy realm",
+            "Unraveling the truth behind a series of mysterious events",
+            "Conquering a fear of public speaking",
+            "Foiling a terrorist plot to save a city",
+            "Navigating the challenges of a long-distance relationship",
+            "Inventing groundbreaking technology",
+            "Chasing the American dream in a new land",
+            "Battling against a powerful dictatorship",
+            "Rebuilding a shattered community",
+            "Discovering an ancient prophecy that must be fulfilled",
+            "Challenging societal norms for equality",
+            "Becoming a legendary figure in a historical event",
+            "Uncovering a secret society with sinister intentions",
+            "Escaping a parallel dimension",
+            "Solving a series of unexplained supernatural occurrences",
+            "Battling against a force of nature",
+            "Surviving a shipwreck on a deserted island",
+            "Fighting for the rights of a marginalized group",
+            "Defying the laws of physics to achieve a goal",
+            "Overcoming a debilitating illness",
+            "Rescuing hostages from a terrorist stronghold",
+            "Discovering a lost civilization in the jungle",
+            "Exploring the mysteries of a haunted mansion",
+            "Championing environmental conservation",
+            "Mastering a unique and powerful form of martial arts",
+            "Reviving a dying art form or tradition",
+            "Becoming a symbol of hope in a dystopian society",
+            "Unraveling the mystery behind a missing person",
+            "Challenging a corrupt political system",
+            "Battling against an army of robots",
+            "Surviving a deadly competition",
+            "Breaking free from a cult",
+            "Inventing a groundbreaking scientific discovery",
+            "Becoming a legendary outlaw",
+            "Escaping captivity in a war-torn country",
+            "Rescuing kidnapped family members",
+            "Battling a deadly alien species",
+            "Experiencing a life-changing spiritual journey",
+            "Challenging the boundaries of artificial intelligence",
+            "Discovering a long-lost sibling",
+            "Becoming a mentor to a troubled youth",
+            "Uncovering a hidden society with supernatural powers",
+            "Rescuing a kidnapped scientist with valuable knowledge",
+            "Chasing a legendary creature in the wilderness",
+            "Fighting against an oppressive regime",
+            "Overcoming a tragic past to find happiness",
+            "Infiltrating a criminal organization to bring it down",
+            "Surviving a plane crash in a remote wilderness",
+            "Discovering a portal to another dimension",
+            "Challenging a powerful corporation's unethical practices",
+            "Becoming a master illusionist",
+            "Unraveling a conspiracy that threatens global stability",
+            "Championing social justice in a corrupt society",
+            "Rescuing hostages from a hijacked plane",
+            "Escaping from a virtual reality gone wrong",
+            "Battling a sentient artificial intelligence",
+            "Inventing a device that changes the world",
+            "Challenging the boundaries of human potential",
+            "Unraveling the mystery of a cursed artifact",
+            "Surviving in a world where technology has collapsed",
+            "Becoming a symbol of resistance against tyranny",
+            "Discovering a hidden world within our own",
+            "Chasing the fountain of youth",
+            "Overcoming the loss of a loved one",
+            "Fighting against a global epidemic",
+            "Rescuing a kidnapped scientist with valuable knowledge",
+            "Battling against an ancient evil that awakens",
+            "Championing the cause of animal rights",
+            "Escaping from a dystopian society",
+            "Unraveling the truth behind a government cover-up",
+            "Infiltrating a secret society with nefarious plans",
+            "Surviving in a world without electricity",
+            "Challenging the boundaries of human cloning",
+            "Becoming a legendary space explorer",
+            "Discovering a portal to parallel universes",
+            "Chasing the meaning of life",
+            "Overcoming a personal tragedy to find happiness",
+            "Fighting against an extraterrestrial invasion",
+            "Rescuing kidnapped children from human traffickers",
+            "Escaping from a maximum-security prison",
+            "Unraveling the mystery of a missing person",
+            "Championing the cause of environmental sustainability",
+            "Infiltrating a dangerous criminal syndicate",
+            "Surviving a deadly pandemic",
+            "Battling against a rogue artificial intelligence",
+            "Chasing a mythological creature in the wilderness",
+            "Overcoming the challenges of space colonization",
+            "Discovering a hidden society with supernatural powers",
+            "Rescuing hostages from a terrorist stronghold",
+            "Escaping from a post-apocalyptic wasteland",
+            "Unraveling the conspiracy behind a global pandemic",
+            "Championing the cause of gender equality",
+            "Becoming a legendary detective",
+            "Fighting against a powerful ancient artifact",
+            "Chasing the source of a mysterious signal from space",
+            "Surviving a deadly game orchestrated by a mysterious figure",
+            "Rescuing a kidnapped political leader",
+            "Escaping from a mind-bending alternate reality",
+            "Unraveling the truth behind a series of unsolved crimes",
+            "Championing the cause of education for all",
+            "Infiltrating a secret government experiment",
+            "Discovering a hidden world within our own",
+            "Overcoming the challenges of time travel",
+            "Becoming a symbol of hope in a war-torn country",
+            "Chasing the elusive cure for a deadly disease",
+            "Fighting against a supernatural entity that terrorizes a small town",
+            "Surviving in a world ruled by intelligent machines",
+            "Rescuing hostages from a deranged criminal",
+            "Escaping from a mysterious cult with dark intentions",
+            "Unraveling the mystery behind a series of disappearances",
+            "Championing the cause of unity in a divided society",
+            "Becoming a legendary warrior in an ancient prophecy",
+            "Discovering a hidden society with advanced technology",
+            "Overcoming the challenges of a parallel universe",
+            "Chasing the truth behind a government experiment gone wrong",
+            "Surviving in a world where nature has turned against humanity",
+            "Rescuing hostages from a high-stakes heist",
+            "Escaping from a deadly game of survival on a deserted island",
+            "Unraveling the conspiracy behind a global financial crisis",
+            "Championing the cause of justice in a corrupt legal system",
+            "Becoming a legendary hero in a mythical land",
+            "Discovering a hidden world beneath the surface of the Earth",
+            "Overcoming the challenges of a virtual reality simulation",
+            "Chasing the elusive secret to immortality",
+            "Fighting against a powerful secret society",
+            "Surviving in a world where dreams become reality",
+            "Rescuing hostages from a terrorist attack on a skyscraper",
+            "Escaping from a mind-bending time loop",
+            "Unraveling the conspiracy behind a series of supernatural events",
+            "Championing the cause of peace in a war-torn region",
+            "Becoming a legendary explorer of uncharted territories",
+            "Discovering a hidden civilization in the depths of the ocean",
+            "Overcoming the challenges of a society ruled by artificial intelligence",
+            "Chasing the truth behind a series of unexplained phenomena",
+            "Fighting against a powerful corporation with unethical practices",
+            "Surviving in a world where reality is constantly shifting",
+            "Rescuing hostages from a dangerous criminal mastermind",
+            "Escaping from a dystopian society where emotions are forbidden",
+            "Unraveling the conspiracy behind a series of government experiments",
+            "Championing the cause of freedom in a totalitarian regime",
+            "Becoming a legendary figure in a world of magic and dragons",
+            "Discovering a hidden society with the ability to manipulate reality",
+            "Overcoming the challenges of a world where technology controls every aspect of life",
+            "Chasing the truth behind a mysterious illness that threatens the world",
+            "Surviving in a world where the laws of physics have been altered",
+            "Rescuing hostages from a terrorist attack on a space station",
+            "Escaping from a post-apocalyptic wasteland ruled by mutant creatures",
+            "Unraveling the conspiracy behind a series of genetic experiments gone wrong",
+            "Championing the cause of equality in a society divided by class",
+            "Becoming a legendary detective in a cyberpunk future",
+            "Discovering a hidden world within the human mind",
+            "Overcoming the challenges of a world where memories can be manipulated",
+            "Chasing the truth behind a series of mysterious disappearances",
+            "Fighting against a powerful corporation that controls the flow of information",
+            "Surviving in a world where dreams and nightmares come to life",
+            "Rescuing hostages from a high-tech facility run by a mad scientist",
+            "Escaping from a parallel dimension where reality is a twisted reflection of our own",
+            "Unraveling the conspiracy behind a series of time anomalies",
+            "Championing the cause of environmental conservation in a world devastated by climate change",
+            "Becoming a legendary hero in a society ruled by ancient prophecies",
+            "Discovering a hidden society with the ability to manipulate emotions",
+            "Overcoming the challenges of a world where technology has merged with biology",
+            "Chasing the truth behind a series of mysterious artifacts with otherworldly powers",
+            "Surviving in a world where the boundaries between reality and virtual reality have blurred",
+            "Rescuing hostages from a high-stakes political hostage situation",
+            "Escaping from a mind-bending alternate dimension where logic is inverted",
+            "Unraveling the conspiracy behind a series of supernatural occurrences that defy explanation",
+            "Championing the cause of human rights in a society dominated by artificial intelligence",
+            "Becoming a legendary figure in a world where myths and legends come to life",
+            "Discovering a hidden society with the ability to manipulate time itself",
+            "Overcoming the challenges of a world where reality is a simulation created by advanced beings",
+            "Chasing the truth behind a series of mysterious symbols with the power to alter reality",
+            "Fighting against a powerful extraterrestrial force that threatens to invade Earth",
+            "Surviving in a world where the laws of physics are constantly changing",
+            "Rescuing hostages from a high-tech facility run by a rogue artificial intelligence",
+            "Escaping from a post-apocalyptic wasteland where mutated creatures roam freely",
+            "Unraveling the conspiracy behind a series of experiments that have unlocked paranormal abilities",
+            "Championing the cause of peace in a world torn apart by interdimensional conflict",
+            "Becoming a legendary warrior in a realm where magic and technology coexist",
+            "Discovering a hidden civilization in the heart of a dense jungle",
+            "Overcoming the challenges of a world where humanity is on the brink of extinction",
+            "Chasing the truth behind a series of ancient artifacts with the power to reshape reality",
+            "Surviving in a world where time flows in unpredictable and chaotic ways",
+            "Rescuing hostages from a high-security facility run by a criminal mastermind",
+            "Escaping from a dystopian society where individuality is forbidden",
+            "Unraveling the conspiracy behind a series of experiments that have unlocked superhuman abilities",
+            "Championing the cause of justice in a world dominated by corrupt corporations",
+            "Becoming a legendary figure in a society where legends and myths come to life",
+            "Discovering a hidden society with the ability to manipulate space and dimensions",
+            "Overcoming the challenges of a world where the laws of physics can be bent by powerful individuals",
+            "Chasing the truth behind a series of mysterious phenomena that defy scientific explanation",
+            "Surviving in a world where reality itself is a construct of advanced beings",
+            "Rescuing hostages from a high-tech facility run by a mysterious organization",
+            "Escaping from a post-apocalyptic wasteland where survival is a constant struggle",
+            "Unraveling the conspiracy behind a series of experiments"
+        ];
+       
+        function generateMovie() {
+            // Randomly select actors, genre, and plot point
+            var randomActor1 = actors[Math.floor(Math.random() * actors.length)];
+            var randomActor2 = actors[Math.floor(Math.random() * actors.length)];
+            var randomGenre = genres[Math.floor(Math.random() * genres.length)];
+            var randomPlotPoint = plotPoints[Math.floor(Math.random() * plotPoints.length)];
+
+            // Display the generated movie idea
+
+            var actorsText = document.getElementById("actors");
+            actorsText.textContent = randomActor1 + " and " + randomActor2 + " in a ";
+
+            var genreText = document.getElementById("genre");
+            genreText.textContent = randomGenre + " movie about ";
+
+            var plotPointText = document.getElementById("plotPoint");
+            plotPointText.textContent = randomPlotPoint + ".";
+
+        }
+    </script>
+</body>
+</html>
